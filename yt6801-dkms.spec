@@ -4,7 +4,7 @@ Name:           %{module}-dkms
 
 Version:        1.0.28
 License:        GPL2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Kernel module for Motorcomm YT6801 Ethernet controller (DKMS)
 
 Group:          System Environment/Kernel
@@ -24,7 +24,7 @@ AutoReqProv:    no
 Kernel module for Motorcomm YT6801 Ethernet controller (DKMS)
 
 %prep
-%setup -c -n %{module}-%{version}
+%setup -q -c -n %{module}-%{version}
 # change dkms.conf to CRLF
 find . -type f -exec dos2unix {} \;
 find . -type f -name '*.c' -exec chmod 644 {} \;
@@ -43,10 +43,16 @@ cp -rf ${RPM_BUILD_DIR}/%{module}-%{version}/ $RPM_BUILD_ROOT/usr/src/
 
 %post
 echo "Adding %{module} dkms modules version %{version} to dkms."
-dkms add -m %{module} -v %{version}
+dkms add -m %{module} -v %{version} || true
 echo "Installing %{module} dkms modules version %{version} for the current kernel."
-dkms install --force -m %{module} -v %{version}
+dkms install -m %{module} -v %{version} || true
+
+%preun
+echo "Uninstalling %{module} dkms modules version %{version} for the current kernel."
+dkms uninstall -m %{module} -v %{version} || true
+echo "Removing %{module} dkms modules version %{version} from all dkms trees."
+dkms remove -m %{module} -v %{version} --all || true
 
 %changelog
-* Tue May 31 2016 Adam Miller <maxamillion@fedoraproject.org> - 1.0.28-1
+* Mon Jul 29 2024 - 1.0.28-2
 - First package
