@@ -1,4 +1,5 @@
 %define module yt6801
+%define debug_package %{nil}
 
 Name:           %{module}-dkms
 
@@ -11,7 +12,8 @@ Group:          System Environment/Kernel
 URL:            https://deb.tuxedocomputers.com/ubuntu/pool/main/t/tuxedo-yt6801/
 Source0:        https://deb.tuxedocomputers.com/ubuntu/pool/main/t/tuxedo-yt6801/tuxedo-%{module}_%{version}.orig.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildArch:      x86_64
+ExclusiveArch:  x86_64
+
 
 Requires:       dkms
 Requires:       kernel-devel, gcc, make
